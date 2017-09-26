@@ -1,2 +1,6 @@
 # EMBOS
 自定义嵌入式操作系统的编写
+宿主机为X86架构的linux操作系统并在命令行下编程;
+或为WINDOWS系统下通过unix环境模拟软件Cygwin进行编程。
+
+目标机为ARM架构(armv4)的s3c2410x开发板;或者通过在WINDOWS下的SkyEye开发板模拟软件模拟开发。
