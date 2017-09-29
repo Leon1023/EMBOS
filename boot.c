@@ -22,7 +22,16 @@ void load_init_boot(init_func *init)
 
 void plat_boot(void)
 {
-	load_init_boot(init);
+	extern void test_vparameter(int,...);
+	int i;
+	//load_init_boot(init);
+	for(i=0;init[i];i++){
+		init[i]();
+	}
+	init_sys_mmu();
+	start_mmu();
+	test_mmu();
+	test_vparameter(3,6,8,6);
 	while(1);
 }
 
