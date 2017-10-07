@@ -6,7 +6,7 @@ CFLAGS= -O2 -g
 ASFLAGS= -O2 -g
 LDFLAGS= -TLeonOS.lds -Ttext 0x30000000
 
-OBJS=init.o start.o boot.o abnormal.o mmu.o
+OBJS=init.o start.o boot.o abnormal.o mmu.o print.o interupt.o mem.o
 
 .c.o:
 	$(CC) $(CFLAGS) -c $<

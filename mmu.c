@@ -6,18 +6,21 @@
 
 #define MEM_MAP_SIZE 			0x800000
 #define PHYSICAL_MEM_ADDR		0x30000000
+#define	VIRTUAL_MEM_ADDR		0x30000000
 
 #define PTE_ALL_AP_L1_SECTION_DEFAULT	(0x1<<10)
 #define PTE_L1_SECTION_NO_CACHE_AND_WB	(0x0<<2)
 #define	PTE_L1_SECTION_DOMAIN_DEFAULT	(0x0<<5)
 
 #define	L1_PTE_BASE_ADDR		0x30700000
-#define	VIRTUAL_MEM_ADDR		0x30000000
 
 #define IO_MAP_SIZE 			0x18000000
 #define PHYSICAL_IO_ADDR		0x48000000
-
 #define	VIRTUAL_IO_ADDR			0xc8000000
+
+#define VECTOR_MAP_SIZE 		0x100000
+#define PHYSICAL_VECTOR_ADDR		0x30000000
+#define	VIRTUAL_VECTOR_ADDR		0x0
 
 //根据物理地址求出段页表项的基本内容
 unsigned int gen_l1_pte(unsigned int paddr)
@@ -51,6 +54,15 @@ void init_sys_mmu(void)
 		pte|=PTE_L1_SECTION_NO_CACHE_AND_WB;
 		pte|=PTE_L1_SECTION_DOMAIN_DEFAULT;
 		pte_addr=gen_l1_pte_addr(L1_PTE_BASE_ADDR,VIRTUAL_IO_ADDR+(j<<20));
+		*(volatile unsigned int *)pte_addr=pte;
+	}
+	//地址映射0x30000000-->0x0
+	for(j=0;j<MEM_MAP_SIZE>>20;j++){//一个页表项对应1M的空间，共需MEM_SIZE/1M次映射
+		pte=gen_l1_pte(PHYSICAL_VECTOR_ADDR+(j<<20));
+		pte|=PTE_ALL_AP_L1_SECTION_DEFAULT;
+		pte|=PTE_L1_SECTION_NO_CACHE_AND_WB;
+		pte|=PTE_L1_SECTION_DOMAIN_DEFAULT;
+		pte_addr=gen_l1_pte_addr(L1_PTR_BASE_ADDR,VIRTUAL_VECTOR_ADDR+(j<<20));
 		*(volatile unsigned int *)pte_addr=pte;
 	}
 }

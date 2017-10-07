@@ -30,7 +30,8 @@ void common_irq_handler(void)
 	printk("%d\t",*(volatile unsigned int *)INTOFFSET);
 	*(volatile unsigned int *)SRCPND|=1<<temp;//通过向相应位写1，清除相应位的中断请求信号
 	*(volatile unsigned int *)INTPND|=1<<temp;//同上
-	printk("timer interupt occured!\n");//真正的中断处理程序位于此后
+	enable_irq();//允许全局中断
+	printk("timer interupt occured!\n");//真正的中断处理程序位于此，且可以中断嵌套
 }
 
 
